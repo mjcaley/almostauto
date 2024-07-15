@@ -6,7 +6,7 @@ authors = [
     { name = "Michael Caley", email = "mjcaley@darkarctic.com" }
 ]
 dependencies = [
-    "sqlalchemy[asyncio]>=2.0.31",
+    "piccolo[postgres]>=1.13.1",
 ]
 readme = "README.md"
 requires-python = ">= 3.12"
@@ -23,4 +23,4 @@ dev-dependencies = []
 allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/db"]
+packages = ["src/almostauto"]
