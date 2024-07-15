@@ -7,8 +7,3 @@ class Templates(Table):
     created = Timestamptz()
     updated = Timestamptz()
     deleted = Timestamptz(null=True, default=None)
-
-
-class TemplateSteps(Table):
-    ...
-
