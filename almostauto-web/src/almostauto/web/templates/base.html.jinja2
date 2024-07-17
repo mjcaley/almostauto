@@ -3,8 +3,10 @@
 <head>
     <title>Almost Automated</title>
     <script src="https://unpkg.com/htmx.org@2.0.0"></script>
+    <script src="https://unpkg.com/htmx.org/dist/ext/json-enc.js"></script>
 </head>
 <body>
+    <div id="header"><h1>Almost Automated</h1></div>
     <div id="content">{% block content %}{% endblock %}</div>
     <div id="footer">
         {% block footer %}

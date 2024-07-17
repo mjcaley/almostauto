@@ -1,6 +1,6 @@
 <h2>New Template</h2>
-<form hx-boost="true" action="/templates" method="post">
+<form hx-boost="true" hx-put="/templates/{{ template.id }}" hx-ext="json-enc">
     <label for="title">Title</label>
-    <input name="title" type="text" placeholder="{{ template.title }}">
+    <input name="title" type="text" value="{{ template.title }}">
     <button type="submit">Submit</button>
 </form>
