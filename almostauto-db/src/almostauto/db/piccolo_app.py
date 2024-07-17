@@ -17,7 +17,7 @@ APP_CONFIG = AppConfig(
         CURRENT_DIRECTORY, "piccolo_migrations"
     ),
     table_classes=table_finder(
-        modules=["almostauto-db.tables"], exclude_imported=True
+        modules=["almostauto.db.tables"], exclude_imported=True
     ),
     migration_dependencies=[],
     commands=[],
