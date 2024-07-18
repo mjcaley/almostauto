@@ -1,0 +1,8 @@
+    <ul>
+    {% for template in templates %}
+        <li hx-target="this">
+            <a href="/templates/{{ template.id }}"><h3>{{ template.title }}</h3></a>
+            <button hx-delete="/templates/{{ template.id }}" hx-swap="delete">Delete</button>
+        </li>
+    {% endfor %}
+    </ul>
