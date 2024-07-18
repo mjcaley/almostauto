@@ -1,12 +1,11 @@
-from typing import Annotated
 from litestar.contrib.htmx.request import HTMXRequest
 from litestar.contrib.htmx.response import HTMXTemplate
-from litestar import get, Litestar
-from litestar.response import Template
+from litestar import get
+from litestar.response import Redirect, Template
 
 from litestar import Controller, get, delete, post, put
 
-from litestar.status_codes import HTTP_200_OK
+from litestar.status_codes import HTTP_200_OK, HTTP_302_FOUND
 
 from almostauto.db import tables
 from .models import (
@@ -28,6 +27,10 @@ class TemplatesController(Controller):
             template_name="pages/templates.html.jinja2",
             context={"templates": templates},
         )
+
+    @delete(status_code=HTTP_200_OK)
+    async def delete_template_from_list(self, template_id: int) -> None:
+        await tables.Templates.delete().where(tables.Templates.id == template_id)
 
     @get("/new")
     async def get_templates_new(request: HTMXRequest) -> Template:
@@ -65,9 +68,11 @@ class TemplatesController(Controller):
             context={"template": ViewTemplate(template_id, data.title)},
         )
 
-    @delete("/{template_id:int}", status_code=HTTP_200_OK)
-    async def delete_template(request: HTMXRequest, template_id: int) -> None:
+    @delete("/{template_id:int}", status_code=HTTP_302_FOUND)
+    async def delete_template(request: HTMXRequest, template_id: int) -> Template:
         await tables.Templates.delete().where(tables.Templates.id == template_id)
+
+        return Redirect("/templates")
 
     @get("/{template_id:int}/edit")
     async def get_template_id_edit(request: HTMXRequest, template_id: int) -> Template:
