@@ -1,6 +1,4 @@
-from typing import Annotated
 from almostauto.web.templates import TemplatesController
-from litestar.contrib.htmx.request import HTMXRequest
 from litestar import get, Litestar
 from litestar.response import Template
 
@@ -13,15 +11,6 @@ from litestar.static_files import create_static_files_router
 from litestar import Litestar, get
 
 from pathlib import Path
-
-from almostauto.db import tables
-from .models import (
-    EditTemplate,
-    EditTemplateDTO,
-    NewTemplate,
-    NewTemplateDTO,
-    ViewTemplate,
-)
 
 
 @get("/")

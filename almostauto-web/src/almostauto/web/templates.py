@@ -58,21 +58,26 @@ class TemplatesController(Controller):
         )
 
     @put("/{template_id:int}", dto=EditTemplateDTO)
-    async def put_template(template_id: int, data: EditTemplate) -> Template:
+    async def put_template(self, template_id: int, data: EditTemplate) -> Template:
         template = await tables.Templates.update(title=data.title).where(
             tables.Templates.id == template_id
         )
 
-        return Template(
+        return HTMXTemplate(
+            push_url=f"/templates/{template_id}",
             template_name="fragments/templates-view.html.jinja2",
             context={"template": ViewTemplate(template_id, data.title)},
         )
 
-    @delete("/{template_id:int}", status_code=HTTP_302_FOUND)
+    @delete("/{template_id:int}", status_code=HTTP_200_OK)
     async def delete_template(request: HTMXRequest, template_id: int) -> Template:
         await tables.Templates.delete().where(tables.Templates.id == template_id)
+        templates = await tables.Templates.objects()
 
-        return Redirect("/templates")
+        return Template(
+            template_name="fragments/templates-list.html.jinja2",
+            context={"template": templates}
+        )
 
     @get("/{template_id:int}/edit")
     async def get_template_id_edit(request: HTMXRequest, template_id: int) -> Template:
@@ -81,7 +86,7 @@ class TemplatesController(Controller):
         )
 
         return HTMXTemplate(
-            push_url="/",
+            push_url=f"/templates/{template_id}/edit",
             template_name="fragments/templates-edit.html.jinja2",
             context={"template": template},
         )
