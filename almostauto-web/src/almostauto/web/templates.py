@@ -1,3 +1,5 @@
+import asyncio
+
 from litestar.contrib.htmx.request import HTMXRequest
 from litestar.contrib.htmx.response import HTMXTemplate
 from litestar import get
@@ -43,18 +45,19 @@ class TemplatesController(Controller):
         return HTMXTemplate(
             push_url=f"{template.id}",
             template_name="fragments/templates-view.html.jinja2",
-            context={"template": template},
+            context={"template": template, "steps": []},
         )
 
     @get("/{template_id:int}")
     async def get_template(request: HTMXRequest, template_id: int) -> Template:
-        template = await tables.Templates.objects().get(
-            tables.Templates.id == template_id
+        template, steps = await asyncio.gather(
+            tables.Templates.objects().get(tables.Templates.id == template_id),
+            tables.TemplateSteps.objects().where(tables.TemplateSteps.id == template_id)
         )
 
         return Template(
             template_name="pages/templates-id.html.jinja2",
-            context={"template": template},
+            context={"template": template, "steps": steps},
         )
 
     @put("/{template_id:int}", dto=EditTemplateDTO)
@@ -66,7 +69,7 @@ class TemplatesController(Controller):
         return HTMXTemplate(
             push_url=f"/templates/{template_id}",
             template_name="fragments/templates-view.html.jinja2",
-            context={"template": ViewTemplate(template_id, data.title)},
+            context={"template": ViewTemplate(template_id, data.title), "steps": []},
         )
 
     @delete("/{template_id:int}", status_code=HTTP_200_OK)

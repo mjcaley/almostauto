@@ -1,6 +1,13 @@
-<div id="bar">
-    <button hx-get="/templates/{{ template.id }}/edit">Edit</button>
+<div id="controls">
+    <button hx-get="/templates/{{ template.id }}/edit" hx-target="#template">Edit</button>
     <button hx-delete="/templates/{{ template.id }}" hx-target="#content" hx-swap="innerHTML">Delete</button>
 </div>
-<h2>{{ template.title }}</h2>
-<p>Title</p><p>{{ template.title }}</p>
+<div id="template">
+    <h2>{{ template.title }}</h2>
+    <p>Title</p><p>{{ template.title }}</p>
+</div>
+<div id="steps">
+    {% for step in steps %}
+    
+    {% endfor %}
+</div>
