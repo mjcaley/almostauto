@@ -1,4 +1,4 @@
-from almostauto.web.templates import TemplatesController
+from almostauto.web.templates import templates_router
 from litestar import get, Litestar
 from litestar.response import Template
 
@@ -22,7 +22,7 @@ app = Litestar(
     route_handlers=[
         create_static_files_router(path="/static", directories=["assets"]),
         get_home,
-        TemplatesController,
+        templates_router,
     ],
     template_config=TemplateConfig(
         directory=Path(__file__).parent / Path("templates"),
