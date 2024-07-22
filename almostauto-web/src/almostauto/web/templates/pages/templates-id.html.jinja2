@@ -1,6 +1,18 @@
 {% extends "base.html.jinja2" %}
 {% block content %}
-    <div hx-target="this" hx-swap="innerHTML">
-        {% include "fragments/templates-view.html.jinja2" %}
-    </div>
+<div id="controls">
+    <button hx-get="/templates/{{ template.id }}/edit" hx-target="#template">Edit</button>
+    <button hx-delete="/templates/{{ template.id }}" hx-push-url="/templates" hx-target="#content" hx-swap="innerHTML">Delete</button>
+</div>
+<div id="template">
+{% block template %}
+    <h2>{{ template.title }}</h2>
+    <p>Title</p><p>{{ template.title }}</p>
+{% endblock %}
+</div>
+<div id="steps">
+    {% for step in steps %}
+    
+    {% endfor %}
+</div>
 {% endblock %}
