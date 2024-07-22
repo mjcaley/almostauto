@@ -6,6 +6,7 @@ from litestar.contrib.jinja import JinjaTemplateEngine
 from litestar.template.config import TemplateConfig
 
 from litestar import Litestar
+from litestar.contrib.htmx.request import HTMXRequest
 from litestar.static_files import create_static_files_router
 
 from litestar import Litestar, get
@@ -28,4 +29,5 @@ app = Litestar(
         directory=Path(__file__).parent / Path("templates"),
         engine=JinjaTemplateEngine,
     ),
+    request_class=HTMXRequest,
 )

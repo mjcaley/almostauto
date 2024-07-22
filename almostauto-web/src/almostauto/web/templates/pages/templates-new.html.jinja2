@@ -1,6 +1,9 @@
 {% extends "base.html.jinja2" %}
 {% block content %}
-    <div hx-target="this" hx-swap="innerHTML">
-        {% include "fragments/templates-new.html.jinja2" %}
-    </div>
+<h2>New Template</h2>
+<form hx-post="/templates" hx-ext="json-enc">
+    <label for="title">Title</label>
+    <input name="title" type="text" placeholder="Template title">
+    <button type="submit">Submit</button>
+</form>
 {% endblock %}

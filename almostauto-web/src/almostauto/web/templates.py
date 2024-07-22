@@ -1,7 +1,6 @@
 import asyncio
 
 from litestar.contrib.htmx.request import HTMXRequest
-from litestar.contrib.htmx.response import HTMXTemplate
 from litestar import Router, get
 from litestar.response import Template
 
@@ -21,7 +20,8 @@ from .models import (
 )
 
 
-#region Pages
+# region Pages
+
 
 @get()
 async def templates_page() -> Template:
@@ -42,7 +42,7 @@ async def templates_new_page() -> Template:
 async def template_id_page(template_id: int) -> Template:
     template, steps = await asyncio.gather(
         tables.Templates.objects().get(tables.Templates.id == template_id),
-        tables.TemplateSteps.objects().where(tables.TemplateSteps.id == template_id)
+        tables.TemplateSteps.objects().where(tables.TemplateSteps.id == template_id),
     )
 
     return Template(
@@ -50,7 +50,20 @@ async def template_id_page(template_id: int) -> Template:
         context={"template": template, "steps": steps},
     )
 
-#endregion
+
+# endregion
+
+
+@get("/list")
+async def templates_list() -> Template:
+    templates = await tables.Templates.objects()
+
+    return HTMXBlockTemplate(
+        template_name="pages/templates.html.jinja2",
+        context={"templates": templates},
+        block_name="list",
+    )
+
 
 @delete("/list/{template_id:int}", status_code=HTTP_200_OK)
 async def delete_template_from_list(template_id: int) -> None:
@@ -61,48 +74,71 @@ async def delete_template_from_list(template_id: int) -> None:
 async def post_template(data: NewTemplate) -> Template:
     template = await tables.Templates.objects().create(title=data.title)
 
-    return HTMXTemplate(
+    return HTMXBlockTemplate(
         push_url=f"{template.id}",
-        template_name="fragments/templates-view.html.jinja2",
+        template_name="pages/templates-id.html.jinja2",
         context={"template": template, "steps": []},
+        block_name="content",
     )
 
 
 @put("/{template_id:int}", dto=EditTemplateDTO)
 async def put_template(template_id: int, data: EditTemplate) -> Template:
-    template = await tables.Templates.update(title=data.title).where(
-        tables.Templates.id == template_id
+    template = (
+        await tables.Templates.update(title=data.title)
+        .where(tables.Templates.id == template_id)
+        .returning(*tables.Templates.all_columns())
     )
 
-    return HTMXTemplate(
+    return HTMXBlockTemplate(
         push_url=f"/templates/{template_id}",
-        template_name="fragments/templates-view.html.jinja2",
-        context={"template": ViewTemplate(template_id, data.title), "steps": []},
+        template_name="pages/templates-id.html.jinja2",
+        context={"template": template, "steps": []},
+        block_name="template",
     )
 
 
 @delete("/{template_id:int}", status_code=HTTP_200_OK)
-async def delete_template(request: HTMXRequest, template_id: int) -> Template:
+async def delete_template(template_id: int) -> Template:
     await tables.Templates.delete().where(tables.Templates.id == template_id)
     templates = await tables.Templates.objects()
 
-    return Template(
-        template_name="fragments/templates-list.html.jinja2",
-        context={"template": templates}
+    return HTMXBlockTemplate(
+        template_name="pages/templates.html.jinja2",
+        context={"templates": templates},
+        block_name="content",
     )
 
 
 @get("/{template_id:int}/edit")
-async def get_template_id_edit(request: HTMXRequest, template_id: int) -> Template:
-    template = await tables.Templates.objects().get(
-        tables.Templates.id == template_id
-    )
+async def edit_template(request: HTMXRequest, template_id: int) -> Template:
+    template = await tables.Templates.objects().get(tables.Templates.id == template_id)
 
-    return HTMXTemplate(
-        push_url=f"/templates/{template_id}/edit",
-        template_name="fragments/templates-edit.html.jinja2",
-        context={"template": template},
-    )
+    if request.htmx:
+        return HTMXBlockTemplate(
+            push_url=f"/templates/{template_id}/edit",
+            template_name="pages/templates-edit.html.jinja2",
+            context={"template": template},
+            block_name="template",
+        )
+    else:
+        return Template(
+            template_name="pages/templates-edit.html.jinja2",
+            context={"template": template},
+        )
 
 
-templates_router = Router(path="/templates", route_handlers=[templates_page, templates_new_page, template_id_page, delete_template_from_list, post_template, put_template, delete_template, get_template_id_edit])
+templates_router = Router(
+    path="/templates",
+    route_handlers=[
+        templates_page,
+        templates_new_page,
+        template_id_page,
+        templates_list,
+        delete_template_from_list,
+        post_template,
+        put_template,
+        delete_template,
+        edit_template,
+    ],
+)
