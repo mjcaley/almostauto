@@ -2,11 +2,12 @@ import asyncio
 
 from litestar.contrib.htmx.request import HTMXRequest
 from litestar import Router, get
+from litestar.exceptions import NotFoundException
 from litestar.response import Template
 
 from litestar import get, delete, post, put
 
-from litestar.status_codes import HTTP_200_OK
+from litestar.status_codes import HTTP_200_OK, HTTP_404_NOT_FOUND
 
 from jinja2_fragments.litestar import HTMXBlockTemplate
 
@@ -44,6 +45,9 @@ async def template_id_page(template_id: int) -> Template:
         tables.Templates.objects().get(tables.Templates.id == template_id),
         tables.TemplateSteps.objects().where(tables.TemplateSteps.id == template_id),
     )
+
+    if not template:
+        raise NotFoundException()
 
     return Template(
         template_name="pages/templates-id.html.jinja2",
