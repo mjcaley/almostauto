@@ -13,6 +13,9 @@ from litestar import Litestar, get
 
 from pathlib import Path
 
+from .templates import templates_router
+from .template_steps import template_steps_router
+
 
 @get("/")
 async def get_home() -> Template:
@@ -33,6 +36,7 @@ app = Litestar(
         create_static_files_router(path="/static", directories=["assets"]),
         get_home,
         templates_router,
+        template_steps_router,
     ],
     exception_handlers={
         HTTP_404_NOT_FOUND: http_404,
