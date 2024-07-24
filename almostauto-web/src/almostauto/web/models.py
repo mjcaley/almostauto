@@ -22,3 +22,10 @@ class ViewTemplate:
 NewTemplateDTO = DataclassDTO[NewTemplate]
 EditTemplateDTO = DataclassDTO[EditTemplate]
 ViewTemplateDTO = DataclassDTO[ViewTemplate]
+
+
+@dataclass
+class NewTemplateStep:
+    title: str
+
+NewTemplateStepDTO = DataclassDTO[NewTemplateStep]

@@ -10,7 +10,7 @@
     <p>Title</p><p>{{ template.title }}</p>
 {% endblock %}
 </div>
-<div id="steps" hx-target="this" hx-get="/templates/{{ template.id }}/steps" hx-trigger="load">
+<div id="steps" hx-target="this">
 {% block template_steps %}
     {% for step in steps %}
     <div id="template-step-{{ step.id }}" hx-target="this">

@@ -9,15 +9,11 @@ from litestar.status_codes import HTTP_200_OK
 from jinja2_fragments.litestar import HTMXBlockTemplate
 
 from almostauto.db import tables
-
-
-@post()
-async def new_template_step(template_id: int) -> Template:
-    ...
+from .models import NewTemplateStepDTO, NewTemplateStep
 
 
 @get()
-async def template_steps(template_id: int) -> str:
+async def template_steps(template_id: int) -> Template:
     template = await tables.Templates.objects().where(tables.Templates.id == template_id)
     steps = await tables.TemplateSteps.objects().where(tables.TemplateSteps.template.id == template_id)
 
@@ -26,6 +22,21 @@ async def template_steps(template_id: int) -> str:
         context={"steps": steps, "template": template},
         block_name="template_steps",
     )
+
+
+@get("/new")
+async def new_template_step(template_id: int) -> Template:
+    template = await tables.Templates.objects().where(tables.Templates.id == template_id)
+
+    return Template(
+        template_name="fragments/template_steps_new.html.jinja2",
+        context={"template": template},
+    )
+
+
+@post(dto=NewTemplateStepDTO)
+async def new_template_step(template_id: int, data: NewTemplateStep) -> Template:
+    ...
 
 
 template_steps_router = Router(
