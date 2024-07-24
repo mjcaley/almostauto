@@ -1,7 +1,11 @@
-from litestar import Request, get, Litestar
+from typing import Any, Mapping
+from jinjax.catalog import Catalog
+
+from litestar import MediaType, Request, get, Litestar
 from litestar.response import Template
 
 from litestar.contrib.jinja import JinjaTemplateEngine
+from litestar.template import TemplateProtocol, TemplateEngineProtocol
 from litestar.template.config import TemplateConfig
 
 from litestar import Litestar
@@ -17,18 +21,41 @@ from .templates import templates_router
 from .template_steps import template_steps_router
 
 
+class JinjaXTemplate(TemplateProtocol):
+    def __init__(self, engine: Catalog, template_name: str):
+        self.engine = engine
+        self.template_name = template_name
+
+    def render(self, **kwargs) -> str:
+        return self.engine.render(self.template_name, **kwargs)
+
+
+class JinjaXTemplateEngine(TemplateEngineProtocol[JinjaXTemplate, Mapping[str, Any]]):
+    def __init__(self, directory=None, **kwargs):
+        self.catalog = Catalog()
+        self.catalog.add_folder(directory)
+
+    def get_template(self, template_name: str) -> JinjaXTemplate:
+        return JinjaXTemplate(self.catalog, template_name)
+
+
 @get("/")
 async def get_home() -> Template:
-    return Template(template_name="pages/home.html.jinja2")
+    return Template(template_name="Home", media_type=MediaType.HTML)
 
 
 def http_404(_: Request, exc: Exception) -> Template:
-    return Template(template_name="pages/404.html.jinja2")
+    return Template(
+        template_name="404", media_type=MediaType.HTML, status_code=HTTP_404_NOT_FOUND
+    )
 
 
 def http_500(_: Request, exc: Exception) -> Template:
-    return Template(template_name="pages/500.html.jinja2")
-
+    return Template(
+        template_name="500",
+        media_type=MediaType.HTML,
+        status_code=HTTP_500_INTERNAL_SERVER_ERROR,
+    )
 
 
 app = Litestar(
@@ -40,11 +67,11 @@ app = Litestar(
     ],
     exception_handlers={
         HTTP_404_NOT_FOUND: http_404,
-        HTTP_500_INTERNAL_SERVER_ERROR: http_500
-        },
+        HTTP_500_INTERNAL_SERVER_ERROR: http_500,
+    },
     template_config=TemplateConfig(
-        directory=Path(__file__).parent / Path("templates"),
-        engine=JinjaTemplateEngine,
+        directory=Path(__file__).parent / Path("components"),
+        engine=JinjaXTemplateEngine,
     ),
     request_class=HTMXRequest,
 )

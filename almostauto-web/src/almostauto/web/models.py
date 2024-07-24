@@ -28,4 +28,5 @@ ViewTemplateDTO = DataclassDTO[ViewTemplate]
 class NewTemplateStep:
     title: str
 
+
 NewTemplateStepDTO = DataclassDTO[NewTemplateStep]

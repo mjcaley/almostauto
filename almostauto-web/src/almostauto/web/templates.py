@@ -1,15 +1,14 @@
 import asyncio
 
 from litestar.contrib.htmx.request import HTMXRequest
-from litestar import Router, get
+from litestar.contrib.htmx.response import HTMXTemplate
+from litestar import MediaType, Router, get
 from litestar.exceptions import NotFoundException
 from litestar.response import Template
 
 from litestar import get, delete, post, put
 
 from litestar.status_codes import HTTP_200_OK, HTTP_404_NOT_FOUND
-
-from jinja2_fragments.litestar import HTMXBlockTemplate
 
 from almostauto.db import tables
 from .models import (
@@ -29,14 +28,15 @@ async def templates_page() -> Template:
     templates = await tables.Templates.objects()
 
     return Template(
-        template_name="pages/templates.html.jinja2",
+        template_name="TemplatesListPage",
         context={"templates": templates},
+        media_type=MediaType.HTML,
     )
 
 
 @get("/new")
 async def templates_new_page() -> Template:
-    return Template(template_name="pages/templates-new.html.jinja2")
+    return Template(template_name="NewTemplatePage", media_type=MediaType.HTML)
 
 
 @get("/{template_id:int}")
@@ -50,8 +50,9 @@ async def template_id_page(template_id: int) -> Template:
         raise NotFoundException()
 
     return Template(
-        template_name="pages/templates-id.html.jinja2",
+        template_name="ViewTemplatePage",
         context={"template": template, "steps": steps},
+        media_type=MediaType.HTML,
     )
 
 
@@ -62,10 +63,10 @@ async def template_id_page(template_id: int) -> Template:
 async def templates_list() -> Template:
     templates = await tables.Templates.objects()
 
-    return HTMXBlockTemplate(
-        template_name="pages/templates.html.jinja2",
+    return HTMXTemplate(
+        template_name="templates.TemplateList",
         context={"templates": templates},
-        block_name="list",
+        media_type=MediaType.HTML,
     )
 
 
@@ -78,27 +79,25 @@ async def delete_template_from_list(template_id: int) -> None:
 async def post_template(data: NewTemplate) -> Template:
     template = await tables.Templates.objects().create(title=data.title)
 
-    return HTMXBlockTemplate(
+    return HTMXTemplate(
         push_url=f"{template.id}",
-        template_name="pages/templates-id.html.jinja2",
+        template_name="templates.ViewTemplateAndSteps",
         context={"template": template, "steps": []},
-        block_name="content",
+        media_type=MediaType.HTML,
     )
 
 
 @put("/{template_id:int}", dto=EditTemplateDTO)
 async def put_template(template_id: int, data: EditTemplate) -> Template:
-    template = (
-        await tables.Templates.update(title=data.title)
-        .where(tables.Templates.id == template_id)
-        .returning(*tables.Templates.all_columns())
+    await tables.Templates.update(title=data.title).where(
+        tables.Templates.id == template_id
     )
+    template = await tables.Templates.objects().get(tables.Templates.id == template_id)
 
-    return HTMXBlockTemplate(
+    return HTMXTemplate(
         push_url=f"/templates/{template_id}",
-        template_name="pages/templates-id.html.jinja2",
-        context={"template": template, "steps": []},
-        block_name="template",
+        template_name="templates.ViewTemplate",
+        context={"template": template},
     )
 
 
@@ -107,10 +106,9 @@ async def delete_template(template_id: int) -> Template:
     await tables.Templates.delete().where(tables.Templates.id == template_id)
     templates = await tables.Templates.objects()
 
-    return HTMXBlockTemplate(
-        template_name="pages/templates.html.jinja2",
+    return HTMXTemplate(
+        template_name="templates.TemplatesList",
         context={"templates": templates},
-        block_name="content",
     )
 
 
@@ -119,16 +117,17 @@ async def edit_template(request: HTMXRequest, template_id: int) -> Template:
     template = await tables.Templates.objects().get(tables.Templates.id == template_id)
 
     if request.htmx:
-        return HTMXBlockTemplate(
+        return HTMXTemplate(
             push_url=f"/templates/{template_id}/edit",
-            template_name="pages/templates-edit.html.jinja2",
+            template_name="templates.EditTemplateForm",
             context={"template": template},
-            block_name="template",
+            media_type=MediaType.HTML,
         )
     else:
         return Template(
-            template_name="pages/templates-edit.html.jinja2",
+            template_name="EditTemplatePage",
             context={"template": template},
+            media_type=MediaType.HTML,
         )
 
 

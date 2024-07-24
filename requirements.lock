@@ -63,10 +63,10 @@ idna==3.7
 inflection==0.5.1
     # via piccolo
 jinja2==3.1.4
-    # via jinja2-fragments
+    # via jinjax
     # via litestar
     # via piccolo
-jinja2-fragments==1.5.0
+jinjax==0.43
     # via almostauto-web
 jsbeautifier==1.15.1
     # via litestar
@@ -76,6 +76,7 @@ markdown-it-py==3.0.0
     # via rich
 markupsafe==2.1.5
     # via jinja2
+    # via jinjax
 mdurl==0.1.2
     # via markdown-it-py
 msgspec==0.18.6
@@ -133,3 +134,5 @@ watchfiles==0.22.0
     # via uvicorn
 websockets==12.0
     # via uvicorn
+whitenoise==6.7.0
+    # via jinjax
