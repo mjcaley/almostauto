@@ -41,7 +41,7 @@ class JinjaXTemplateEngine(TemplateEngineProtocol[JinjaXTemplate, Mapping[str, A
 
 @get("/")
 async def get_home() -> Template:
-    return Template(template_name="Home", media_type=MediaType.HTML)
+    return Template(template_name="HomePage", media_type=MediaType.HTML)
 
 
 def http_404(_: Request, exc: Exception) -> Template:

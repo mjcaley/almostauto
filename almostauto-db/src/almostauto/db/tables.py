@@ -12,4 +12,4 @@ class Templates(Table):
 class TemplateSteps(Table):
     order = Integer()
     title = Varchar()
-    template = ForeignKey(Templates, unique=True)
+    template = ForeignKey(Templates)

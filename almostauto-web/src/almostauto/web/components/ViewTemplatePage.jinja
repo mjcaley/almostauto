@@ -2,4 +2,7 @@
 
 <Base>
     <templates.ViewTemplateAndSteps template={{ template }} steps={{ steps }} />
+    <div hx-target="this">
+        <template_steps.CreateStepButton template_id={{ template.id }} />
+    </div>
 </Base>

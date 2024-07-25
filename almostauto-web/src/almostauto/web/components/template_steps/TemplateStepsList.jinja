@@ -1,0 +1,7 @@
+{#def template_id, steps #}
+
+{% for step in steps %}
+<details id="template-steps-{{ step.id }}">
+    <summary>{{ step.title }}</summary>
+</details>
+{% endfor %}
