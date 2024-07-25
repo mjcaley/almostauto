@@ -1,8 +1,8 @@
 {#def template_id, steps #}
 
 <div>
-    <CreateStepButton />
+    <template_steps.CreateStepButton template_id={{ template_id }} />
 </div>
-<div id="steps">
-    <TemplateStepsList template_id={{ template_id }} steps={{ steps }} />
+<div id="steps" hx-swap-oob="true">
+    <template_steps.TemplateStepsList template_id={{ template_id }} steps={{ steps }} />
 </div>

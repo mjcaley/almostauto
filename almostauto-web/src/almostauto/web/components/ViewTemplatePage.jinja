@@ -1,8 +1,13 @@
 {#def template, steps #}
 
 <Base>
-    <templates.ViewTemplateAndSteps template={{ template }} steps={{ steps }} />
-    <div hx-target="this">
-        <template_steps.CreateStepButton template_id={{ template.id }} />
+    <div id="controls">
+        <templates.ViewTemplateControls template={{ template }} />
+    </div>
+    <div id="template" hx-target="this">
+        <templates.ViewTemplate template={{ template }} />
+    </div>
+    <div id="steps" hx-target="this">
+        <template_steps.TemplateStepsList template_id={{ template.id }} steps={{ steps }} />
     </div>
 </Base>

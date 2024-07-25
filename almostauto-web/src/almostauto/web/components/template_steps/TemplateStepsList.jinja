@@ -5,3 +5,6 @@
     <summary>{{ step.title }}</summary>
 </details>
 {% endfor %}
+<div hx-target="this" hx-swap="innerHTML">
+    <template_steps.CreateStepButton template_id={{ template_id }} />
+</div>

@@ -41,10 +41,10 @@ async def templates_new_page() -> Template:
 
 @get("/{template_id:int}")
 async def template_id_page(template_id: int) -> Template:
-    template, steps = await asyncio.gather(
-        tables.Templates.objects().get(tables.Templates.id == template_id),
-        tables.TemplateSteps.objects().where(tables.TemplateSteps.id == template_id),
-    )
+    template = await tables.Templates.objects().get(tables.Templates.id == template_id)
+    steps = await tables.TemplateSteps.objects().where(tables.TemplateSteps.template == template)
+
+    print(steps)
 
     if not template:
         raise NotFoundException()

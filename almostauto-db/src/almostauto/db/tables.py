@@ -1,5 +1,5 @@
 from piccolo.table import Table
-from piccolo.columns import ForeignKey, Integer, Varchar, Timestamptz
+from piccolo.columns import ForeignKey, Integer, Varchar, Timestamptz, OnDelete
 
 
 class Templates(Table):
@@ -12,4 +12,4 @@ class Templates(Table):
 class TemplateSteps(Table):
     order = Integer()
     title = Varchar()
-    template = ForeignKey(Templates)
+    template = ForeignKey(Templates, null=False, on_delete=OnDelete.no_action)

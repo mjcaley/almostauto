@@ -22,9 +22,9 @@ class Templates(Table, tablename="templates", schema=None):
     )
 
 
-ID = "2024-07-19T22:15:35:887458"
+ID = "2024-07-25T08:56:10:619856"
 VERSION = "1.13.1"
-DESCRIPTION = ""
+DESCRIPTION = "Create template_steps table"
 
 
 async def forwards():
@@ -91,12 +91,12 @@ async def forwards():
         column_class=ForeignKey,
         params={
             "references": Templates,
-            "on_delete": OnDelete.cascade,
+            "on_delete": OnDelete.no_action,
             "on_update": OnUpdate.cascade,
             "target_column": None,
-            "null": True,
+            "null": False,
             "primary_key": False,
-            "unique": True,
+            "unique": False,
             "index": False,
             "index_method": IndexMethod.btree,
             "choices": None,
