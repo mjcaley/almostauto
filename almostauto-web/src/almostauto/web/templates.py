@@ -42,7 +42,9 @@ async def templates_new_page() -> Template:
 @get("/{template_id:int}")
 async def template_id_page(template_id: int) -> Template:
     template = await tables.Templates.objects().get(tables.Templates.id == template_id)
-    steps = await tables.TemplateSteps.objects().where(tables.TemplateSteps.template == template)
+    steps = await tables.TemplateSteps.objects().where(
+        tables.TemplateSteps.template == template
+    )
 
     print(steps)
 
@@ -103,7 +105,11 @@ async def put_template(template_id: int, data: EditTemplate) -> Template:
 
 @delete("/{template_id:int}", status_code=HTTP_200_OK)
 async def delete_template(template_id: int) -> Template:
-    await tables.Templates.delete().where(tables.Templates.id == template_id)
+    async with tables.Templates._meta.db.transaction():
+        await tables.TemplateSteps.delete().where(
+            tables.TemplateSteps.template == template_id
+        )
+        await tables.Templates.delete().where(tables.Templates.id == template_id)
     templates = await tables.Templates.objects()
 
     return HTMXTemplate(
