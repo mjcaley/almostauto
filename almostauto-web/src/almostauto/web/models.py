@@ -29,4 +29,10 @@ class NewTemplateStep:
     title: str
 
 
+@dataclass
+class EditTemplateStep:
+    title: str
+
+
 NewTemplateStepDTO = DataclassDTO[NewTemplateStep]
+EditTemplateStepDTO = DataclassDTO[EditTemplateStep]

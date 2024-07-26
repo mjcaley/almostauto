@@ -1,0 +1,7 @@
+{#def template_id, step #}
+
+<form hx-put="/templates/{{ template_id }}/steps/{{ step.number }}" hx-ext="json-enc">
+    <label for="title">Title</label>
+    <input name="title" type="text" value="{{ step.title }}">
+    <button type="submit">Submit</button>
+</form>
