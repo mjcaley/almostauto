@@ -10,6 +10,6 @@ class Templates(Table):
 
 
 class TemplateSteps(Table):
-    order = Integer()
+    number = Integer()
     title = Varchar()
     template = ForeignKey(Templates, null=False, on_delete=OnDelete.no_action)

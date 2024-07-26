@@ -37,17 +37,19 @@ async def new_template_step_form(template_id: int) -> Template:
 @post(dto=NewTemplateStepDTO)
 async def new_template_step(template_id: int, data: NewTemplateStep) -> Template:
     async with tables.TemplateSteps._meta.db.transaction():
-        latest_order = await tables.TemplateSteps.select(
-            Max(tables.TemplateSteps.order)
-        ).first()
-        next_order = latest_order["max"] if latest_order["max"] is not None else 0
+        latest_number = (
+            await tables.TemplateSteps.select(Max(tables.TemplateSteps.number))
+            .where(tables.TemplateSteps.template == template_id)
+            .first()
+        )
+        next_number = latest_number["max"] if latest_number["max"] is not None else 0
         await tables.TemplateSteps.objects().create(
-            title=data.title, template=template_id, order=next_order
+            title=data.title, template=template_id, number=next_number
         )
     steps = (
         await tables.TemplateSteps.objects()
         .where(tables.TemplateSteps.template == template_id)
-        .order_by(tables.TemplateSteps.order)
+        .order_by(tables.TemplateSteps.number)
     )
 
     return Template(
@@ -57,25 +59,26 @@ async def new_template_step(template_id: int, data: NewTemplateStep) -> Template
     )
 
 
-@delete("/{order:int}", status_code=HTTP_200_OK)
-async def delete_template_step(template_id: int, order: int) -> Template:
+@delete("/{number:int}", status_code=HTTP_200_OK)
+async def delete_template_step(template_id: int, number: int) -> Template:
     async with tables.TemplateSteps._meta.db.transaction():
-        deleted_rows = (
-            await tables.TemplateSteps.delete()
-            .where(
-                tables.Templates.id == template_id
-                and tables.TemplateSteps.order == order
-            )
-            .returning(tables.TemplateSteps.order)
+        await tables.TemplateSteps.delete().where(
+            tables.Templates.id == template_id and tables.TemplateSteps.number == number
         )
-        for row in deleted_rows:
-            await tables.TemplateSteps.update(
-                {tables.TemplateSteps.order: tables.TemplateSteps.order - 1}
-            ).where(tables.TemplateSteps.order > row["order"])
+        print("deleted")
+        print(
+            tables.TemplateSteps.update(
+                {tables.TemplateSteps.number: tables.TemplateSteps.number - 1}
+            ).where(tables.TemplateSteps.number > number)
+        )
+        await tables.TemplateSteps.update(
+            {tables.TemplateSteps.number: tables.TemplateSteps.number - 1}
+        ).where(tables.TemplateSteps.number > number)
+        print("updated")
     steps = (
         await tables.TemplateSteps.objects()
         .where(tables.TemplateSteps.template == template_id)
-        .order_by(tables.TemplateSteps.order)
+        .order_by(tables.TemplateSteps.number)
     )
 
     return Template(

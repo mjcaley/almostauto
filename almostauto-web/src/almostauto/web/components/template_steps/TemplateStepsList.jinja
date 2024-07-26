@@ -1,10 +1,10 @@
 {#def template_id, steps #}
 
 {% for step in steps %}
-<details id="template-steps-{{ step.order }}">
+<details id="template-steps-{{ step.number }}">
     <summary>{{ step.title }}</summary>
-    <button hx-get="/templates/{{ template_id }}/steps/{{ step.order }}">Edit</button>
-    <button hx-delete="/templates/{{ template_id }}/steps/{{ step.order }}">Delete</button>
+    <button hx-get="/templates/{{ template_id }}/steps/{{ step.number }}">Edit</button>
+    <button hx-delete="/templates/{{ template_id }}/steps/{{ step.number }}">Delete</button>
 </details>
 {% endfor %}
 <div hx-target="this" hx-swap="innerHTML">

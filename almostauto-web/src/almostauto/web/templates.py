@@ -46,8 +46,6 @@ async def template_id_page(template_id: int) -> Template:
         tables.TemplateSteps.template == template
     )
 
-    print(steps)
-
     if not template:
         raise NotFoundException()
 
