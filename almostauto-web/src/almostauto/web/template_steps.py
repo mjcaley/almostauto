@@ -50,7 +50,7 @@ async def new_template_step(template_id: int, data: NewTemplateStep) -> Template
         next_number = (
             (latest_number["max"] + 1) if latest_number["max"] is not None else 0
         )
-        await tables.TemplateSteps.objects().create(
+        step = await tables.TemplateSteps.objects().create(
             title=data.title, template=template_id, number=next_number
         )
     steps = (
@@ -61,7 +61,7 @@ async def new_template_step(template_id: int, data: NewTemplateStep) -> Template
 
     return Template(
         template_name="template_steps.CreateTemplateStep",
-        context={"steps": steps, "template_id": template_id},
+        context={"step": step, "template_id": template_id},
         media_type=MediaType.HTML,
     )
 
@@ -113,15 +113,16 @@ async def template_steps_edit_save(
         .where(tables.TemplateSteps.template == template_id)
         .where(tables.TemplateSteps.number == number)
     )
-    steps = (
+    step = (
         await tables.TemplateSteps.objects()
         .where(tables.TemplateSteps.template == template_id)
-        .order_by(tables.TemplateSteps.number)
+        .where(tables.TemplateSteps.number == number)
+        .first()
     )
 
     return Template(
-        template_name="template_steps.TemplateStepsList",
-        context={"template_id": template_id, "steps": steps},
+        template_name="template_steps.TemplateStep",
+        context={"template_id": template_id, "step": step},
         media_type=MediaType.HTML,
     )
 
