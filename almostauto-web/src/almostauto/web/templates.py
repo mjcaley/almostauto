@@ -130,9 +130,11 @@ async def edit_template(request: HTMXRequest, template_id: int) -> Template:
             media_type=MediaType.HTML,
         )
     else:
+        steps = await tables.TemplateSteps.objects().where(tables.TemplateSteps.template == template)
+
         return Template(
             template_name="EditTemplatePage",
-            context={"template": template},
+            context={"template": template, "steps": steps},
             media_type=MediaType.HTML,
         )
 

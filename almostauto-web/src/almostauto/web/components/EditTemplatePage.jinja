@@ -7,12 +7,10 @@
             <button hx-delete="/templates/{{ template.id }}" hx-push-url="/templates" hx-target="#content" hx-swap="innerHTML">Delete</button>
         </div>
         <div id="template">
-        <templates.EditTemplateForm template={{ template }} />
+            <templates.EditTemplateForm template={{ template }} />
         </div>
         <div id="steps">
-            {% for step in steps %}
-            
-            {% endfor %}
+            <template_steps.TemplateStepsList template_id={{ template.id }} steps={{ steps }} />
         </div>
     </div>
 </Base>

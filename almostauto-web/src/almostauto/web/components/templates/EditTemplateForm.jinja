@@ -1,7 +1,7 @@
 {#def template #}
 
 <form hx-put="/templates/{{ template.id }}" hx-target="#template" hx-ext="json-enc">
-    <label for="template-{{ template.id }}-title">Title</label>
-    <input name="template-{{ template.id }}-title" type="text" value="{{ template.title }}">
+    <label for="title">Title</label>
+    <input name="title" type="text" value="{{ template.title }}">
     <button type="submit">Submit</button>
 </form>
