@@ -12,4 +12,4 @@ class Templates(Table):
 class TemplateSteps(Table):
     number = Integer()
     title = Varchar()
-    template = ForeignKey(Templates, null=False, on_delete=OnDelete.no_action)
+    template = ForeignKey(Templates, null=False, on_delete=OnDelete.cascade)
