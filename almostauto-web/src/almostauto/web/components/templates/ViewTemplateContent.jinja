@@ -1,0 +1,11 @@
+{#def template, steps #}
+
+<div id="controls">
+    <templates.ViewTemplateControls template={{ template }} />
+</div>
+<div id="template" hx-target="this">
+    <templates.ViewTemplate template={{ template }} />
+</div>
+<div id="steps">
+    <template_steps.TemplateStepsList template_id={{ template.id }} steps={{ steps }} />
+</div>

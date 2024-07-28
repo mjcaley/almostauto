@@ -1,16 +1,5 @@
 {#def template, steps #}
 
 <Base>
-    <div hx-target="this" hx-swap="innerHTML">
-        <div id="controls">
-            <button hx-get="/templates/{{ template.id }}/edit" hx-target="#template">Edit</button>
-            <button hx-delete="/templates/{{ template.id }}" hx-push-url="/templates" hx-target="#content" hx-swap="innerHTML">Delete</button>
-        </div>
-        <div id="template">
-            <templates.EditTemplateForm template={{ template }} />
-        </div>
-        <div id="steps">
-            <template_steps.TemplateStepsList template_id={{ template.id }} steps={{ steps }} />
-        </div>
-    </div>
+    <template.EditTemplateContent template={{ template }} steps={{ steps }} />
 </Base>

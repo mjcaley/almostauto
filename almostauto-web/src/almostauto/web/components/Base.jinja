@@ -10,7 +10,7 @@
     <div id="sidebar">
         <ul>
             <li><a href="/">Home</a></li>
-            <li><a href="/templates">Templates</a></li>
+            <li><a href="/templates" hx-get="/templates" hx-target="#content">Templates</a></li>
         </ul>
     </div>
     <div id="content" hx-target="this" hx-swap="innerHTML">{{ content }}</div>

@@ -24,14 +24,22 @@ from .models import (
 
 
 @get()
-async def templates_page() -> Template:
+async def templates_page(request: HTMXRequest) -> Template:
     templates = await tables.Templates.objects()
 
-    return Template(
-        template_name="TemplatesListPage",
-        context={"templates": templates},
-        media_type=MediaType.HTML,
-    )
+    if request.htmx:
+        return HTMXTemplate(
+            template_name="templates.TemplatesContent",
+            context={"templates": templates},
+            media_type=MediaType.HTML,
+            push_url="/templates"
+        )
+    else:
+        return Template(
+            template_name="TemplatesListPage",
+            context={"templates": templates},
+            media_type=MediaType.HTML,
+        )
 
 
 @get("/new")
@@ -83,7 +91,7 @@ async def post_template(data: NewTemplate) -> Template:
 
     return HTMXTemplate(
         push_url=f"{template.id}",
-        template_name="templates.ViewTemplateAndSteps",
+        template_name="templates.ViewTemplateContent",
         context={"template": template, "steps": []},
         media_type=MediaType.HTML,
     )
@@ -105,16 +113,13 @@ async def put_template(template_id: int, data: EditTemplate) -> Template:
 
 @delete("/{template_id:int}", status_code=HTTP_200_OK)
 async def delete_template(template_id: int) -> Template:
-    async with tables.Templates._meta.db.transaction():
-        await tables.TemplateSteps.delete().where(
-            tables.TemplateSteps.template == template_id
-        )
-        await tables.Templates.delete().where(tables.Templates.id == template_id)
+    await tables.Templates.delete().where(tables.Templates.id == template_id)
     templates = await tables.Templates.objects()
 
     return HTMXTemplate(
-        template_name="templates.TemplatesList",
+        template_name="templates.TemplatesContent",
         context={"templates": templates},
+        push_url="/",
     )
 
 
