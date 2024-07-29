@@ -1,6 +1,6 @@
-from enum import StrEnum
+from enum import IntEnum
 from piccolo.table import Table
-from piccolo.columns import ForeignKey, Integer, Varchar, Timestamptz, OnDelete
+from piccolo.columns import ForeignKey, Integer, Varchar, Timestamptz, OnDelete, Text
 
 
 class Templates(Table):
@@ -17,20 +17,37 @@ class TemplateSteps(Table):
 
 
 class Runbooks(Table):
-    class Result(StrEnum):
-        NEW = "New"
-        SUCCESS = "Success"
-        FAILED = "Failed"
-        CANCELLED = "Cancelled"
+    class Result(IntEnum):
+        NEW = 0
+        SUCCESS = 1
+        FAILED = 2
+        CANCELLED = 3
 
     title = Varchar()
-    result = Varchar(length=25, choices=Result, default=Result.NEW)
+    result = Integer(choices=Result, default=Result.NEW)
     completed = Timestamptz(null=True)
     created = Timestamptz()
     updated = Timestamptz()
 
 
 class RunbookSteps(Table):
+    class Result(IntEnum):
+        NOT_STARTED = 0
+        IN_PROGRESS = 1
+        SUCCESS = 2
+        SKIPPED = 3
+        FAILED = 4
+
     number = Integer()
     title = Varchar()
+    result = Integer(choices=Result, default=Result.NOT_STARTED)
+    started = Timestamptz(null=True)
+    finished = Timestamptz(null=True)
     runbook = ForeignKey(Runbooks)
+
+
+class RunbookStepComment(Table):
+    comment = Text()
+    created = Timestamptz()
+    updated = Timestamptz()
+    runbook_step= ForeignKey(RunbookSteps)

@@ -2,5 +2,6 @@
 
 <div id="controls">
     <button hx-get="/templates/{{ template.id }}/edit" hx-target="#template">Edit</button>
-    <button hx-delete="/templates/{{ template.id }}" hx-push-url="/templates" hx-target="#content" hx-swap="innerHTML">Delete</button>
+    <a href="/templates/{{ template.id }}/runbook" hx-post="/templates/{{ template.id }}/runbook">New Runbook</a>
+    <a href="/templates/{{ template.id }}" hx-delete="/templates/{{ template.id }}">Delete</a>
 </div>
