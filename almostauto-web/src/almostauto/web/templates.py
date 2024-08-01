@@ -1,7 +1,5 @@
-import asyncio
-
 from litestar.contrib.htmx.request import HTMXRequest
-from litestar.contrib.htmx.response import HTMXTemplate
+from litestar.contrib.htmx.response import HTMXTemplate, ClientRedirect
 from litestar import MediaType, Response, Router, get
 from litestar.exceptions import NotFoundException
 from litestar.response import Template
@@ -138,7 +136,7 @@ async def edit_template(request: HTMXRequest, template_id: int) -> Template:
             media_type=MediaType.HTML,
         )
     
-@post("/{template_id:int}/runbook", status_code=HTTP_303_SEE_OTHER)
+@post("/{template_id:int}/runbook")
 async def new_runbook(template_id: int) -> Response[None]:
     async with tables.Runbooks._meta.db.transaction():
         template = await tables.Templates.objects().get(tables.Templates.id == template_id)
@@ -154,7 +152,7 @@ async def new_runbook(template_id: int) -> Response[None]:
             ])
             await runbook_steps_query
 
-    return Response(None, headers={"Location": f"/runbooks/{runbook.id}"})
+    return ClientRedirect(f"/runbooks/{runbook.id}")
 
 
 templates_router = Router(

@@ -4,7 +4,6 @@ from jinjax.catalog import Catalog
 from litestar import MediaType, Request, get, Litestar
 from litestar.response import Template
 
-from litestar.contrib.jinja import JinjaTemplateEngine
 from litestar.template import TemplateProtocol, TemplateEngineProtocol
 from litestar.template.config import TemplateConfig
 
@@ -19,6 +18,7 @@ from pathlib import Path
 
 from .templates import templates_router
 from .template_steps import template_steps_router
+from .runbooks import runbooks_router
 
 
 class JinjaXTemplate(TemplateProtocol):
@@ -64,6 +64,7 @@ app = Litestar(
         get_home,
         templates_router,
         template_steps_router,
+        runbooks_router,
     ],
     exception_handlers={
         HTTP_404_NOT_FOUND: http_404,

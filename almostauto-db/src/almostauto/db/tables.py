@@ -38,6 +38,19 @@ class RunbookSteps(Table):
         SKIPPED = 3
         FAILED = 4
 
+        def to_str(self):
+            match self.value:
+                case self.NOT_STARTED:
+                    return "Not Started"
+                case self.IN_PROGRESS:
+                    return "In Progress"
+                case self.SUCCESS:
+                    return "Success"
+                case self.SKIPPED:
+                    return "Skipped"
+                case self.FAILED:
+                    return "Failed"
+
     number = Integer()
     title = Varchar()
     result = Integer(choices=Result, default=Result.NOT_STARTED)

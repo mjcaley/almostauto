@@ -1,0 +1,10 @@
+{#def runbooks #}
+
+<ul>
+    {% for runbook in runbooks %}
+    <li>
+        <a href="/runbooks/{{ runbook.id }}" hx-get="/runbooks/{{ runbook.id }}" hx-push-url="/runbooks/{{ runbook.id }}">{{ runbook.title }}</a>
+        Created: {{ runbook.created }}
+    </li>
+    {%endfor%}
+</ul>
