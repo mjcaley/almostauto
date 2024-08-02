@@ -19,9 +19,10 @@ class TemplateSteps(Table):
 class Runbooks(Table):
     class Result(IntEnum):
         NEW = 0
-        SUCCESS = 1
-        FAILED = 2
-        CANCELLED = 3
+        IN_PROGRESS = 1
+        SUCCESS = 2
+        FAILED = 3
+        CANCELLED = 4
 
     title = Varchar()
     result = Integer(choices=Result, default=Result.NEW)

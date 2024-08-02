@@ -36,3 +36,11 @@ class EditTemplateStep:
 
 NewTemplateStepDTO = DataclassDTO[NewTemplateStep]
 EditTemplateStepDTO = DataclassDTO[EditTemplateStep]
+
+
+@dataclass
+class RunbookPatch:
+    result: int
+
+
+RunbookPatchDTO = DataclassDTO[RunbookPatch]

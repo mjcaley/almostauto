@@ -39,7 +39,7 @@ class Runbooks(Table, tablename="runbooks", schema=None):
     )
 
 
-ID = "2024-07-28T18:56:55:957852"
+ID = "2024-08-01T20:28:34:882901"
 VERSION = "1.13.1"
 DESCRIPTION = "Add runbook tables"
 
@@ -47,6 +47,13 @@ DESCRIPTION = "Add runbook tables"
 async def forwards():
     manager = MigrationManager(
         migration_id=ID, app_name="almostauto-db", description=DESCRIPTION
+    )
+
+    manager.add_table(
+        class_name="RunbookStepComment",
+        tablename="runbook_step_comment",
+        schema=None,
+        columns=None,
     )
 
     manager.add_table(
@@ -60,11 +67,91 @@ async def forwards():
         columns=None,
     )
 
-    manager.add_table(
-        class_name="RunbookStepComment",
+    manager.add_column(
+        table_class_name="RunbookStepComment",
         tablename="runbook_step_comment",
+        column_name="comment",
+        db_column_name="comment",
+        column_class_name="Text",
+        column_class=Text,
+        params={
+            "default": "",
+            "null": False,
+            "primary_key": False,
+            "unique": False,
+            "index": False,
+            "index_method": IndexMethod.btree,
+            "choices": None,
+            "db_column_name": None,
+            "secret": False,
+        },
         schema=None,
-        columns=None,
+    )
+
+    manager.add_column(
+        table_class_name="RunbookStepComment",
+        tablename="runbook_step_comment",
+        column_name="created",
+        db_column_name="created",
+        column_class_name="Timestamptz",
+        column_class=Timestamptz,
+        params={
+            "default": TimestamptzNow(),
+            "null": False,
+            "primary_key": False,
+            "unique": False,
+            "index": False,
+            "index_method": IndexMethod.btree,
+            "choices": None,
+            "db_column_name": None,
+            "secret": False,
+        },
+        schema=None,
+    )
+
+    manager.add_column(
+        table_class_name="RunbookStepComment",
+        tablename="runbook_step_comment",
+        column_name="updated",
+        db_column_name="updated",
+        column_class_name="Timestamptz",
+        column_class=Timestamptz,
+        params={
+            "default": TimestamptzNow(),
+            "null": False,
+            "primary_key": False,
+            "unique": False,
+            "index": False,
+            "index_method": IndexMethod.btree,
+            "choices": None,
+            "db_column_name": None,
+            "secret": False,
+        },
+        schema=None,
+    )
+
+    manager.add_column(
+        table_class_name="RunbookStepComment",
+        tablename="runbook_step_comment",
+        column_name="runbook_step",
+        db_column_name="runbook_step",
+        column_class_name="ForeignKey",
+        column_class=ForeignKey,
+        params={
+            "references": RunbookSteps,
+            "on_delete": OnDelete.cascade,
+            "on_update": OnUpdate.cascade,
+            "target_column": None,
+            "null": True,
+            "primary_key": False,
+            "unique": False,
+            "index": False,
+            "index_method": IndexMethod.btree,
+            "choices": None,
+            "db_column_name": None,
+            "secret": False,
+        },
+        schema=None,
     )
 
     manager.add_column(
@@ -104,7 +191,14 @@ async def forwards():
             "index": False,
             "index_method": IndexMethod.btree,
             "choices": Enum(
-                "Result", {"NEW": 0, "SUCCESS": 1, "FAILED": 2, "CANCELLED": 3}
+                "Result",
+                {
+                    "NEW": 0,
+                    "IN_PROGRESS": 1,
+                    "SUCCESS": 2,
+                    "FAILED": 3,
+                    "CANCELLED": 4,
+                },
             ),
             "db_column_name": None,
             "secret": False,
@@ -299,93 +393,6 @@ async def forwards():
         column_class=ForeignKey,
         params={
             "references": Runbooks,
-            "on_delete": OnDelete.cascade,
-            "on_update": OnUpdate.cascade,
-            "target_column": None,
-            "null": True,
-            "primary_key": False,
-            "unique": False,
-            "index": False,
-            "index_method": IndexMethod.btree,
-            "choices": None,
-            "db_column_name": None,
-            "secret": False,
-        },
-        schema=None,
-    )
-
-    manager.add_column(
-        table_class_name="RunbookStepComment",
-        tablename="runbook_step_comment",
-        column_name="comment",
-        db_column_name="comment",
-        column_class_name="Text",
-        column_class=Text,
-        params={
-            "default": "",
-            "null": False,
-            "primary_key": False,
-            "unique": False,
-            "index": False,
-            "index_method": IndexMethod.btree,
-            "choices": None,
-            "db_column_name": None,
-            "secret": False,
-        },
-        schema=None,
-    )
-
-    manager.add_column(
-        table_class_name="RunbookStepComment",
-        tablename="runbook_step_comment",
-        column_name="created",
-        db_column_name="created",
-        column_class_name="Timestamptz",
-        column_class=Timestamptz,
-        params={
-            "default": TimestamptzNow(),
-            "null": False,
-            "primary_key": False,
-            "unique": False,
-            "index": False,
-            "index_method": IndexMethod.btree,
-            "choices": None,
-            "db_column_name": None,
-            "secret": False,
-        },
-        schema=None,
-    )
-
-    manager.add_column(
-        table_class_name="RunbookStepComment",
-        tablename="runbook_step_comment",
-        column_name="updated",
-        db_column_name="updated",
-        column_class_name="Timestamptz",
-        column_class=Timestamptz,
-        params={
-            "default": TimestamptzNow(),
-            "null": False,
-            "primary_key": False,
-            "unique": False,
-            "index": False,
-            "index_method": IndexMethod.btree,
-            "choices": None,
-            "db_column_name": None,
-            "secret": False,
-        },
-        schema=None,
-    )
-
-    manager.add_column(
-        table_class_name="RunbookStepComment",
-        tablename="runbook_step_comment",
-        column_name="runbook_step",
-        db_column_name="runbook_step",
-        column_class_name="ForeignKey",
-        column_class=ForeignKey,
-        params={
-            "references": RunbookSteps,
             "on_delete": OnDelete.cascade,
             "on_update": OnUpdate.cascade,
             "target_column": None,
