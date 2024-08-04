@@ -9,8 +9,7 @@ VERSION = "1.13.1"
 DESCRIPTION = "Add delete cascade to template_steps"
 
 
-class RawTable(Table):
-    ...
+class RawTable(Table): ...
 
 
 async def forwards():
@@ -28,7 +27,7 @@ async def forwards():
             on delete cascade
             on update cascade;
             """)
-        
+
     manager.add_raw(run_forward)
 
     async def run_backward():
@@ -40,7 +39,7 @@ async def forwards():
             references "templates"(id)
             on update cascade;
             """)
-        
+
     manager.add_raw_backwards(run_backward)
 
     return manager

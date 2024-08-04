@@ -2,13 +2,16 @@
 
 <div id="runbook-controls" hx-target="this" hx-swap="outerHTML">
     {% if status == 0 %}
-    {# New status #}
+    {# New #}
     <button hx-patch="/runbooks/{{ runbook_id }}" hx-vals='{"result": 1}'>Start</button>
     <button hx-patch="/runbooks/{{ runbook_id }}" hx-vals='{"result": 4}'>Cancel</button>
-    {% else %}
-    {# In Progress status #}
-    <button hx-patch="/runbooks/{{ runbook_id }}" hx-vals='{"result": 1}'>Complete</button>
+    {% elif status == 1 %}
+    {# In progress #}
+    <button hx-patch="/runbooks/{{ runbook_id }}" hx-vals='{"result": 2}'>Complete</button>
     <button hx-patch="/runbooks/{{ runbook_id }}" hx-vals='{"result": 3}'>Fail</button>
     <button hx-patch="/runbooks/{{ runbook_id }}" hx-vals='{"result": 4}'>Cancel</button>
+    {% else %}
+    {# Closed #}
+
     {% endif %}
 </div>

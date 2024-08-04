@@ -5,7 +5,11 @@ from litestar.contrib.htmx.response import HTMXTemplate
 from litestar import MediaType, Response, Router, get, patch
 from litestar.enums import RequestEncodingType
 from litestar.params import Body
-from litestar.exceptions import NotFoundException
+from litestar.exceptions import (
+    NotFoundException,
+    InternalServerException,
+    ClientException,
+)
 from litestar.response import Template
 
 from almostauto.db import tables
@@ -46,11 +50,38 @@ async def runbook(request: HTMXRequest, runbook_id: int) -> Template:
             context={"runbook": runbook},
             media_type=MediaType.HTML,
         )
-    
+
 
 @patch("/{runbook_id:int}")
-async def patch_runbook(runbook_id: int, data: Annotated[RunbookPatch, Body(media_type=RequestEncodingType.URL_ENCODED)]) -> Template:
-    await tables.Runbooks.update({tables.Runbooks.result: tables.Runbooks.Result(data.result)}).where(tables.Runbooks.id == runbook_id)
+async def patch_runbook(
+    runbook_id: int,
+    data: Annotated[RunbookPatch, Body(media_type=RequestEncodingType.URL_ENCODED)],
+) -> Template:
+    async with tables.Runbooks._meta.db.transaction():
+        current_result = (
+            await tables.Runbooks.select(tables.Runbooks.result)
+            .where(tables.Runbooks.id == runbook_id)
+            .first()
+        )
+
+        if not current_result:
+            raise NotFoundException(detail="Runbook ID not found")
+        elif current_result[
+            "result"
+        ] == tables.Runbooks.Result.IN_PROGRESS and data.result in [
+            tables.Runbooks.Result.NEW,
+            tables.Runbooks.Result.IN_PROGRESS,
+        ]:
+            raise ClientException(
+                detail="'In Progress' can only trasition to finished result state"
+            )
+        elif current_result["result"] == data.result:
+            raise ClientException(detail="Cannot transition to same result state")
+
+        await tables.Runbooks.update({tables.Runbooks.result: data.result}).where(
+            tables.Runbooks.id == runbook_id
+        )
+
     runbook = await tables.Runbooks.objects().get(tables.Runbooks.id == runbook_id)
 
     return Template(
@@ -65,5 +96,5 @@ runbooks_router = Router(
         list_runbooks,
         runbook,
         patch_runbook,
-    ]
+    ],
 )

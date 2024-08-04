@@ -30,7 +30,7 @@ async def templates_page(request: HTMXRequest) -> Template:
             template_name="templates.TemplatesContent",
             context={"templates": templates},
             media_type=MediaType.HTML,
-            push_url="/templates"
+            push_url="/templates",
         )
     else:
         return Template(
@@ -109,7 +109,11 @@ async def put_template(template_id: int, data: EditTemplate) -> Template:
     )
 
 
-@delete("/{template_id:int}", status_code=HTTP_303_SEE_OTHER, response_headers={"Location": "/templates"})
+@delete(
+    "/{template_id:int}",
+    status_code=HTTP_303_SEE_OTHER,
+    response_headers={"Location": "/templates"},
+)
 async def delete_template(template_id: int) -> Response[None]:
     await tables.Templates.delete().where(tables.Templates.id == template_id)
 
@@ -128,28 +132,40 @@ async def edit_template(request: HTMXRequest, template_id: int) -> Template:
             media_type=MediaType.HTML,
         )
     else:
-        steps = await tables.TemplateSteps.objects().where(tables.TemplateSteps.template == template)
+        steps = await tables.TemplateSteps.objects().where(
+            tables.TemplateSteps.template == template
+        )
 
         return Template(
             template_name="EditTemplatePage",
             context={"template": template, "steps": steps},
             media_type=MediaType.HTML,
         )
-    
+
+
 @post("/{template_id:int}/runbook")
 async def new_runbook(template_id: int) -> Response[None]:
     async with tables.Runbooks._meta.db.transaction():
-        template = await tables.Templates.objects().get(tables.Templates.id == template_id)
-        steps = await tables.TemplateSteps.objects().where(tables.TemplateSteps.template == template_id)
+        template = await tables.Templates.objects().get(
+            tables.Templates.id == template_id
+        )
+        steps = await tables.TemplateSteps.objects().where(
+            tables.TemplateSteps.template == template_id
+        )
         runbook = await tables.Runbooks.objects().create(title=template.title)
         if steps:
-            runbook_steps_query = tables.RunbookSteps.insert(*[
-                tables.RunbookSteps({
-                    tables.RunbookSteps.number: step.number,
-                    tables.RunbookSteps.title: step.title,
-                    tables.RunbookSteps.runbook: runbook,
-                }) for step in steps
-            ])
+            runbook_steps_query = tables.RunbookSteps.insert(
+                *[
+                    tables.RunbookSteps(
+                        {
+                            tables.RunbookSteps.number: step.number,
+                            tables.RunbookSteps.title: step.title,
+                            tables.RunbookSteps.runbook: runbook,
+                        }
+                    )
+                    for step in steps
+                ]
+            )
             await runbook_steps_query
 
     return ClientRedirect(f"/runbooks/{runbook.id}")

@@ -2,12 +2,14 @@ from piccolo.conf.apps import AppRegistry
 from piccolo.engine.postgres import PostgresEngine
 
 
-DB = PostgresEngine(config={
-    "host": "localhost",
-    "database": "almostauto",
-    "user": "postgres",
-    "password": "",
-})
+DB = PostgresEngine(
+    config={
+        "host": "localhost",
+        "database": "almostauto",
+        "user": "postgres",
+        "password": "",
+    }
+)
 
 
 # A list of paths to piccolo apps

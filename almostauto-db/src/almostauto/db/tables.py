@@ -64,4 +64,4 @@ class RunbookStepComment(Table):
     comment = Text()
     created = Timestamptz()
     updated = Timestamptz()
-    runbook_step= ForeignKey(RunbookSteps)
+    runbook_step = ForeignKey(RunbookSteps)
