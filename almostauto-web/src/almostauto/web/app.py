@@ -19,6 +19,7 @@ from pathlib import Path
 from .templates import templates_router
 from .template_steps import template_steps_router
 from .runbooks import runbooks_router
+from .runbook_steps import runbook_steps_router
 
 
 class JinjaXTemplate(TemplateProtocol):
@@ -65,6 +66,7 @@ app = Litestar(
         templates_router,
         template_steps_router,
         runbooks_router,
+        runbook_steps_router,
     ],
     exception_handlers={
         HTTP_404_NOT_FOUND: http_404,
