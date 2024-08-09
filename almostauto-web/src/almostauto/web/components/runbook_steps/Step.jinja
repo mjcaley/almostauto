@@ -1,0 +1,9 @@
+{#def runbook_id, step #}
+
+<li>
+    Number: {{ step.number }}
+    Title: {{ step.title }}
+    <runbook_steps.ResultControl runbook_id={{ runbook_id }} step={{ step }} />
+    Result: {{ step.result }}
+    <button hx-get="/runbooks/{{ runbook_id }}/steps/{{ step.number }}/edit">Edit</button>
+</li>

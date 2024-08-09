@@ -44,3 +44,11 @@ class RunbookPatch:
 
 
 RunbookPatchDTO = DataclassDTO[RunbookPatch]
+
+
+@dataclass
+class RunbookStepPatch:
+    result: int
+
+
+RunbookStepPatchDTO = DataclassDTO[RunbookStepPatch]

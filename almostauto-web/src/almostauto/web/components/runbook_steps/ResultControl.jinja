@@ -1,0 +1,34 @@
+{#def runbook_id, step #}
+
+<select hx-target="this" hx-swap="outerHTML">
+    <option
+        hx-patch="/runbooks/{{ runbook_id }}/steps/{{ step.number }}"
+        hx-vals='{"result": 0}'
+        {% if step.result == 0 %}selected{% endif %}>
+        Not Started
+    </option>
+    <option
+        hx-patch="/runbooks/{{ runbook_id }}/steps/{{ step.number }}"
+        hx-vals='{"result": 1}'
+        {% if step.result == 1 %}selected{% endif %}>
+        In Progress
+    </option>
+    <option
+        hx-patch="/runbooks/{{ runbook_id }}/steps/{{ step.number }}"
+        hx-vals='{"result": 2}'
+        {% if step.result == 2 %}selected{% endif %}>
+        Success
+    </option>
+    <option
+        hx-patch="/runbooks/{{ runbook_id }}/steps/{{ step.number }}"
+        hx-vals='{"result": 3}'
+        {% if step.result == 3 %}selected{% endif %}>
+        Skip
+    </option>
+    <option
+        hx-patch="/runbooks/{{ runbook_id }}/steps/{{ step.number }}"
+        hx-vals='{"result": 4}'
+        {% if step.result == 4 %}selected{% endif %}>
+        Fail
+    </option>
+</select>

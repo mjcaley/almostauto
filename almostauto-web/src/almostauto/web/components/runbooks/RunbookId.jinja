@@ -1,4 +1,4 @@
-{#def runbook #}
+{#def runbook, steps #}
 
 <runbooks.ControlPanel runbook_id={{ runbook.id }} status={{ runbook.result }} />
 
@@ -7,3 +7,8 @@
 <p>Created: {{ runbook.created }}</p>
 <p>Updated: {{ runbook.updated }}</p>
 <h4>Steps</h4>
+<ul>
+    {% for step in steps %}
+    <runbook_steps.Step runbook_id={{ runbook.id }} step={{ step }} />
+    {% endfor %}
+</ul>

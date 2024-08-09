@@ -13,7 +13,7 @@ from litestar.exceptions import (
 from litestar.response import Template
 
 from almostauto.db import tables
-from .models import RunbookPatch, RunbookPatchDTO
+from .models import RunbookPatch, RunbookPatchDTO, RunbookStepPatch, RunbookStepPatchDTO
 
 
 @get()
@@ -37,17 +37,24 @@ async def list_runbooks(request: HTMXRequest) -> Template:
 @get("/{runbook_id:int}")
 async def runbook(request: HTMXRequest, runbook_id: int) -> Template:
     runbook = await tables.Runbooks.objects().get(tables.Runbooks.id == runbook_id)
+    if not runbook:
+        raise NotFoundException(detail="Runbook not found")
+    steps = (
+        await tables.RunbookSteps.objects()
+        .where(tables.RunbookSteps.runbook == runbook)
+        .order_by(tables.RunbookSteps.number)
+    )
 
     if request.htmx:
         return Template(
             template_name="runbooks.RunbookId",
-            context={"runbook": runbook},
+            context={"runbook": runbook, "steps": steps},
             media_type=MediaType.HTML,
         )
     else:
         return Template(
             template_name="RunbookIdPage",
-            context={"runbook": runbook},
+            context={"runbook": runbook, "steps": steps},
             media_type=MediaType.HTML,
         )
 
@@ -90,11 +97,52 @@ async def patch_runbook(
     )
 
 
+@patch("/{runbook_id:int}/steps/{step_number:int}")
+async def patch_runbook_step(
+    runbook_id: int,
+    step_number: int,
+    data: Annotated[RunbookStepPatch, Body(media_type=RequestEncodingType.URL_ENCODED)],
+) -> Template:
+    async with tables.RunbookSteps._meta.db.transaction():
+        current_result = (
+            await tables.RunbookSteps.select(tables.RunbookSteps.result)
+            .where(
+                tables.RunbookSteps.runbook == runbook_id,
+                tables.RunbookSteps.number == step_number,
+            )
+            .first()
+        )
+        if current_result and current_result["result"] == data.result:
+            raise ClientException(detail="Cannot trasition to same result")
+        await tables.RunbookSteps.update(
+            {tables.RunbookSteps.result: tables.RunbookSteps.Result(data.result)}
+        ).where(
+            tables.RunbookSteps.runbook == runbook_id,
+            tables.RunbookSteps.number == step_number,
+        )
+
+    step = (
+        await tables.RunbookSteps.objects()
+        .where(
+            tables.RunbookSteps.runbook == runbook_id,
+            tables.RunbookSteps.number == step_number,
+        )
+        .first()
+    )
+
+    return Template(
+        template_name="runbook_steps.ResultControl",
+        context={"runbook_id": runbook_id, "step": step},
+        media_type=MediaType.HTML,
+    )
+
+
 runbooks_router = Router(
     path="/runbooks",
     route_handlers=[
         list_runbooks,
         runbook,
         patch_runbook,
+        patch_runbook_step,
     ],
 )
