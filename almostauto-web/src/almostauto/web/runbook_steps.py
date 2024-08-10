@@ -16,7 +16,7 @@ from almostauto.db import tables
 from .models import RunbookStepPatch
 
 
-@patch("/{runbook_id:int}/steps/{step_number:int}")
+@patch("/steps/{step_number:int}")
 async def patch_runbook_step(
     runbook_id: int,
     step_number: int,
