@@ -9,6 +9,8 @@
 <h4>Steps</h4>
 <ul>
     {% for step in steps %}
-    <runbook_steps.Step runbook_id={{ runbook.id }} step={{ step }} />
+    <li hx-target="this">
+        <runbook_steps.Step runbook_id={{ runbook.id }} step={{ step }} />
+    </li>
     {% endfor %}
 </ul>

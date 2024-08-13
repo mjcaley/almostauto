@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 
-from litestar.dto import DataclassDTO
+from litestar.dto import DataclassDTO, DTOConfig
+from litestar.contrib.piccolo import PiccoloDTO
+from almostauto.db import tables
 
 
 @dataclass
@@ -48,7 +50,9 @@ RunbookPatchDTO = DataclassDTO[RunbookPatch]
 
 @dataclass
 class RunbookStepPatch:
+    title: str
     result: int
 
 
-RunbookStepPatchDTO = DataclassDTO[RunbookStepPatch]
+class RunbookStepPatchDTO(PiccoloDTO[tables.RunbookSteps]):
+    config = DTOConfig(partial=True)
