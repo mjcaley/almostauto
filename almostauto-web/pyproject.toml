@@ -28,3 +28,7 @@ allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/almostauto"]
+include = [
+    "src/almostauto/web/components/**/*.jinja",
+    "src/almostauto/web/static/**/*.css",
+]
