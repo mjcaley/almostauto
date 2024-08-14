@@ -61,7 +61,7 @@ def http_500(_: Request, exc: Exception) -> Template:
 
 app = Litestar(
     route_handlers=[
-        create_static_files_router(path="/static", directories=["assets"]),
+        create_static_files_router(path="/static", directories=[Path(__file__).parent / Path("static")]),
         get_home,
         templates_router,
         template_steps_router,

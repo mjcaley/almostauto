@@ -1,25 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>Almost Automated</title>
     <script src="https://unpkg.com/htmx.org@2.0.1"></script>
     <script src="https://unpkg.com/htmx-ext-json-enc@2.0.0/json-enc.js"></script>
+    <link href="/static/style.css" rel="stylesheet" />
 </head>
-<body>
-    <div id="header"><h1>Almost Automated</h1></div>
-    <div id="sidebar">
-        <ul>
-            <li><a href="/">Home</a></li>
-            <li>
-                <a href="/runbooks" hx-get="/runbooks" hx-target="#content">Runbooks</a>
-                <ul><li><a href="/templates" hx-get="/templates" hx-target="#content">Templates</a></li></ul>
-            </li>
-        </ul>
+
+<body class="grid grid-rows-3">
+    <div id="header">
+        <h1 class="font-sans text-4xl font-semibold">Almost Automated</h1>
     </div>
-    <div id="content" hx-target="this">{{ content }}</div>
+    <div>
+        <div id="sidebar">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li>
+                    <a href="/runbooks" hx-get="/runbooks" hx-target="#content">Runbooks</a>
+                    <ul>
+                        <li><a href="/templates" hx-get="/templates" hx-target="#content">Templates</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div id="content" hx-target="this">{{ content }}</div>
+    </div>
     <div id="footer">
         {% block footer %}
         {% endblock %}
     </div>
 </body>
+
 </html>
