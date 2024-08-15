@@ -32,3 +32,8 @@ include = [
     "src/almostauto/web/components/**/*.jinja",
     "src/almostauto/web/static/**/*.css",
 ]
+
+[tool.rye.scripts]
+devserver = "litestar --app almostauto.web.app:app run --reload --debug"
+tailwind = "tailwindcss -i src/almostauto/web/input.css -o src/almostauto/web/static/style.css"
+tailwind-watch = "tailwindcss -i src/almostauto/web/input.css -o src/almostauto/web/static/style.css --watch"
