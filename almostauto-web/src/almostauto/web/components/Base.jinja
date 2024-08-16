@@ -10,14 +10,13 @@
 
 <body>
     <div class="flex">
-        <nav id="sidebar" class="w-1/6 min-h-screen bg-blue-500 text-slate-100 py-4">
-            <h1 class="font-sans text-xl font-semibold p-2 text-left">almost auto<span class="text-slate-300">mated</span></h1>
-            <ul class="p-2">
-                <li class="hover:bg-blue-300"><a href="/">Home</a></li>
+        <nav id="sidebar" class="w-1/6  min-h-screen bg-blue-500 text-slate-100 py-4">
+            <a href="/" class="font-sans text-xl font-semibold px-2 py-4 text-left">almost auto<span class="text-slate-300">mated</span></a>
+            <ul>
                 <li>
-                    <a href="/runbooks" class="hover:bg-blue-300 block min-w-full" hx-get="/runbooks" hx-target="#content">Runbooks</a>
+                    <a href="/runbooks" class="hover:bg-gradient-to-r from-blue-300 px-2 py-1 block min-w-full" hx-get="/runbooks" hx-target="#content">Runbooks</a>
                     <ul class="pl-4">
-                        <li class="hover:bg-blue-300"><a href="/templates" hx-get="/templates" hx-target="#content">Templates</a></li>
+                        <li class="hover:bg-gradient-to-r from-blue-300 px-2 py-1"><a href="/templates" hx-get="/templates" hx-target="#content">Templates</a></li>
                     </ul>
                 </li>
             </ul>
