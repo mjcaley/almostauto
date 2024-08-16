@@ -2,33 +2,27 @@
 <html lang="en">
 
 <head>
-    <title>Almost Automated</title>
+    <title>almost automated</title>
     <script src="https://unpkg.com/htmx.org@2.0.1"></script>
     <script src="https://unpkg.com/htmx-ext-json-enc@2.0.0/json-enc.js"></script>
     <link href="/static/style.css" rel="stylesheet" />
 </head>
 
-<body class="grid grid-rows-3">
-    <div id="header">
-        <h1 class="font-sans text-4xl font-semibold">Almost Automated</h1>
-    </div>
-    <div>
-        <div id="sidebar">
-            <ul>
-                <li><a href="/">Home</a></li>
+<body>
+    <div class="flex">
+        <nav id="sidebar" class="w-1/6 min-h-screen bg-blue-500 text-slate-100 py-4">
+            <h1 class="font-sans text-xl font-semibold p-2 text-left">almost auto<span class="text-slate-300">mated</span></h1>
+            <ul class="p-2">
+                <li class="hover:bg-blue-300"><a href="/">Home</a></li>
                 <li>
-                    <a href="/runbooks" hx-get="/runbooks" hx-target="#content">Runbooks</a>
-                    <ul>
-                        <li><a href="/templates" hx-get="/templates" hx-target="#content">Templates</a></li>
+                    <a href="/runbooks" class="hover:bg-blue-300 block min-w-full" hx-get="/runbooks" hx-target="#content">Runbooks</a>
+                    <ul class="pl-4">
+                        <li class="hover:bg-blue-300"><a href="/templates" hx-get="/templates" hx-target="#content">Templates</a></li>
                     </ul>
                 </li>
             </ul>
-        </div>
-        <div id="content" hx-target="this">{{ content }}</div>
-    </div>
-    <div id="footer">
-        {% block footer %}
-        {% endblock %}
+        </nav>
+        <div id="content" class="w-full bg-gray-200 py-4" hx-target="this">{{ content }}</div>
     </div>
 </body>
 
