@@ -7,11 +7,12 @@
             <h3>{{ template.title }}</h3>
         </a>
         <a href="/templates/{{ template.id }}/edit"
-            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 my-2">
+            role="button"
+            class="btn btn-outline btn-primary">
             Edit
         </a>
         <button
-            class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 my-2"
+            class="btn btn-outline btn-error"
             hx-delete="/templates/list/{{ template.id }}" hx-swap="delete">Delete</button>
     </div>
     {% endfor %}

@@ -3,13 +3,13 @@
 <div id="runbook-controls" hx-target="this" hx-swap="outerHTML">
     {% if status == 0 %}
     {# New #}
-    <button hx-patch="/runbooks/{{ runbook_id }}" hx-vals='{"result": 1}'>Start</button>
-    <button hx-patch="/runbooks/{{ runbook_id }}" hx-vals='{"result": 4}'>Cancel</button>
+    <button class="btn btn-outline btn-primary" hx-patch="/runbooks/{{ runbook_id }}" hx-vals='{"result": 1}'>Start</button>
+    <button class="btn btn-outline btn-warning" hx-patch="/runbooks/{{ runbook_id }}" hx-vals='{"result": 4}'>Cancel</button>
     {% elif status == 1 %}
     {# In progress #}
-    <button hx-patch="/runbooks/{{ runbook_id }}" hx-vals='{"result": 2}'>Complete</button>
-    <button hx-patch="/runbooks/{{ runbook_id }}" hx-vals='{"result": 3}'>Fail</button>
-    <button hx-patch="/runbooks/{{ runbook_id }}" hx-vals='{"result": 4}'>Cancel</button>
+    <button class="btn btn-outline btn-success" hx-patch="/runbooks/{{ runbook_id }}" hx-vals='{"result": 2}'>Complete</button>
+    <button class="btn btn-outline btn-error" hx-patch="/runbooks/{{ runbook_id }}" hx-vals='{"result": 3}'>Fail</button>
+    <button class="btn btn-outline btn-warning" hx-patch="/runbooks/{{ runbook_id }}" hx-vals='{"result": 4}'>Cancel</button>
     {% else %}
     {# Closed #}
 

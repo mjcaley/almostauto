@@ -1,7 +1,7 @@
 {#def template #}
 
 <div id="controls">
-    <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 my-2" hx-get="/templates/{{ template.id }}/edit" hx-target="#template">Edit</button>
-    <a class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 my-2" href="/templates/{{ template.id }}/runbook" hx-post="/templates/{{ template.id }}/runbook">New Runbook</a>
-    <a class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 my-2" href="/templates/{{ template.id }}" hx-delete="/templates/{{ template.id }}">Delete</a>
+    <button class="btn btn-primary" hx-get="/templates/{{ template.id }}/edit" hx-target="#template">Edit</button>
+    <a role="button" class="btn btn-primary" href="/templates/{{ template.id }}/runbook" hx-post="/templates/{{ template.id }}/runbook">New Runbook</a>
+    <a class="btn btn-outline btn-error" href="/templates/{{ template.id }}" hx-delete="/templates/{{ template.id }}">Delete</a>
 </div>

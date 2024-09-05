@@ -4,8 +4,8 @@
 
 <h3>{{ runbook.title }}</h3>
 <p>Status: {{ runbook.result }}</p>
-<p>Created: {{ runbook.created }}</p>
-<p>Updated: {{ runbook.updated }}</p>
+<p>Created: <span x-data="{date: new Date($el.innerText)}" x-text="date.toLocaleString()">{{ runbook.created }}</span></p>
+<p>Updated: <span x-data="{date: new Date($el.innerText)}" x-text="date.toLocaleString()">{{ runbook.updated }}</span></p>
 <h4>Steps</h4>
 <ul>
     {% for step in steps %}

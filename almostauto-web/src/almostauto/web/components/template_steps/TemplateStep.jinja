@@ -2,6 +2,6 @@
 
 <details id="template-steps-{{ step.number }}">
     <summary>{{ step.title }}</summary>
-    <button hx-get="/templates/{{ template_id }}/steps/{{ step.number }}/edit" hx-target="#template-steps-{{ step.number }}" hx-swap="outerHTML">Edit</button>
-    <button hx-delete="/templates/{{ template_id }}/steps/{{ step.number }}" hx-target="#steps">Delete</button>
+    <button class="btn btn-outline btn-primary" hx-get="/templates/{{ template_id }}/steps/{{ step.number }}/edit" hx-target="#template-steps-{{ step.number }}" hx-swap="outerHTML">Edit</button>
+    <button class="btn btn-outline btn-error" hx-delete="/templates/{{ template_id }}/steps/{{ step.number }}" hx-target="#steps">Delete</button>
 </details>

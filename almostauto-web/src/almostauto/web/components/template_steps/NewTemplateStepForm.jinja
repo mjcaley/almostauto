@@ -1,7 +1,7 @@
 {#def template_id #}
 
 <form hx-post="/templates/{{ template_id }}/steps" hx-target="this" hx-swap="outerHTML" hx-ext="json-enc">
-    <label for="title">Title</label>
-    <input name="title" type="text" placeholder="Step title">
-    <button type="submit">Submit</button>
+    <label for="title" class="label">Title</label>
+    <input name="title" type="text" placeholder="Step title" class="input">
+    <button class="btn btn-outline btn-primary" type="submit">Submit</button>
 </form>

@@ -1,0 +1,10 @@
+{
+  "name": "almostauto-web",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "daisyui": "^4.12.10",
+    "postcss": "^8.4.44"
+  }
+}
